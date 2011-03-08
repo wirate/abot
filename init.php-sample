@@ -1,0 +1,90 @@
+<?php set_include_path(get_include_path() . PATH_SEPARATOR . 'library');
+
+require_once 'Relay/Client.php';
+require_once 'Relay/Event.php';
+
+// irc conf.
+$bcfg = array(
+    'nick'      => 'nick',
+    'ip'        => 'server',
+    'port'      => 6667,
+    'password'  => 'pass',
+    'use_ssl'   => false,
+    'realname'  => 'name',
+    'channels'  => array('#ch1', '#ch2'),
+    'reconnect' => true,
+    'automsg'   => array('cmd1',
+    			 'cmd2'),
+);
+
+$client = new Relay_Client($bcfg);
+
+$event = new Relay_Event($client, './events/');
+
+// setting up the template
+$event->registerTemplate(
+    'DiskspaceTemplate',
+    new Relay_Event_Template(array(
+        'command' => '^PRIVMSG$',
+	'params' => '^\#.+',
+        'trail' => "^{$bcfg['nick']}\:\x20diskspace$")
+    )
+);
+
+$event->registerTemplate(
+    'ReleaseTemplate',
+    new Relay_Event_Template(array(
+        'command' => '^PRIVMSG$',
+        'params' => '^\#.+',
+        'trail' => "^{$bcfg['nick']}\:\x20search")
+    )
+);
+
+// bind funkCommand to the template
+$event->registerEvent('diskspace', 'DiskspaceTemplate');
+$event->registerEvent('Release', 'ReleaseTemplate');
+
+$a_queue = msg_get_queue(ftok(__FILE__, 'r'));
+
+$client->connect();
+
+while(true) {
+	
+     if(msg_receive($a_queue, 0, $a_msg_type, 512, $a_msg, false, MSG_IPC_NOWAIT)) {
+        $msg = new Relay_Protocol_Message('PRIVMSG');
+
+	if($a_msg[0] == '!') {
+	    $line = substr(trim($a_msg), 1) . "\n";
+	    $client->write($line);
+        } else if($a_msg[0] == "#") {
+	    $sp = strpos($a_msg, ' ');
+            $ch = substr($a_msg, 0, $sp);
+
+	    if(in_array($ch, $bcfg['channels'])) {
+               $sendstr = substr($a_msg, $sp);
+               $msg->setParam($ch);
+               $msg->setTrail($sendstr);
+               $client->write($msg->getMessage());
+            }
+        }
+        // send out to all channels
+        else {
+          $msg->setParam(implode(',', (array) $bcfg['channels']));
+          $msg->setTrail($a_msg);
+
+          $client->write($msg->getMessage());
+          unset($msg);
+        }
+    }
+	
+    $response = $client->read();
+    
+    if($response === null) {
+    	continue;
+    }
+    
+    $event->check($response);
+    
+    echo $response->getMessage();
+}
+

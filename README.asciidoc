@@ -1,0 +1,20 @@
+Main Header
+===========
+Optional Author Name <optional@author.email>
+Optional version, optional date
+:Author:    AlternativeWayToSetOptional Author Name
+:Email:     <AlternativeWayToSetOptional@author.email>
+:Date:      AlternativeWayToSetOptional date
+:Revision:  AlternativeWayToSetOptional version
+
+= Abot, A IRC announce bot written in php.
+
+And also, A Framework! (it is designed so that the core IRC functionatly is kept
+separated from the "announce-bot" part)
+
+== Configuration
+
+Copy ini.php-sample and edit the array.
+
+currently, database connection and information is stored in models (models/*).
+So you have to edit those to.
