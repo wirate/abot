@@ -12,10 +12,11 @@ class Relay_Protocol_Message
     /**
      * constants
      */
-    const PRFX = ':';
-    const CHPRFX = '#';
+    const SEGM_SEP  = ' ';
+    const PREFIX    = ':';
+    const CHPREFIX  = '#';
     const SEPARATOR = ',';
-    const END = "\n\r";
+    const EOL 	    = "\n\r";
 
     /**
      * Static Array containing command codes
@@ -300,20 +301,20 @@ class Relay_Protocol_Message
         $string = '';
 
         if (strlen($this->prefix)) {
-            $string .= self::PRFX . $this->prefix . ' ';
+            $string .= self::PREFIX . $this->prefix . self::SEGM_SEP;
         }
 
         $string .= $this->command;
 
         foreach ($this->parameters as $param) {
-            $string .= ' ' . $param;
+            $string .= self::SEGM_SEP . $param;
         }
 
         if (strlen($this->trail)) {
-            $string .= ' ' . self::PRFX . $this->trail;
+            $string .= self::SEGM_SEP . self::PREFIX . $this->trail;
         }
 
-        return $string . self::END;
+        return $string . self::EOL;
     }
 
     public function validatePrefix($prefix = null)
@@ -403,10 +404,10 @@ class Relay_Protocol_Message
         $p = 0;
 
         $prefix = '';
-        if ($str[0] === ':') {
+        if ($str[0] === self::PREFIX) {
             for($p = 1; $p < strlen($str); $p++) {
 
-                if ($str[$p] == ' ') {
+                if ($str[$p] == self::SEGM_SEP) {
                     $p++;
                     break;
                 }
@@ -417,7 +418,7 @@ class Relay_Protocol_Message
 
         $cmd = '';
         for(; $p < strlen($str); $p++) {
-            if ($str[$p] == ' ') {
+            if ($str[$p] == self::SEGM_SEP) {
                 break;
             }
 
@@ -430,8 +431,8 @@ class Relay_Protocol_Message
         $params = array();
         for(; $p < strlen($str); $p++) {
 
-            if ($str[$p] == ' ') {
-                if ($str[$p + 1] == ':') {
+            if ($str[$p] == self::SEGM_SEP) {
+                if ($str[$p + 1] == self::PREFIX) {
                     $p += 2;
                     break;
                 }
@@ -442,8 +443,6 @@ class Relay_Protocol_Message
 
             $params[$c] .= $str[$p];
         }
-
-        
 
         $trail = '';
         for(; $p < strlen($str); $p++) {
