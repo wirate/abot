@@ -402,6 +402,7 @@ class Relay_Protocol_Message
         $str = rtrim($str);
         $p = 0;
 
+        $prefix = '';
         if ($str[0] === ':') {
             for($p = 1; $p < strlen($str); $p++) {
 
@@ -414,6 +415,7 @@ class Relay_Protocol_Message
             }
         }
 
+        $cmd = '';
         for(; $p < strlen($str); $p++) {
             if ($str[$p] == ' ') {
                 break;
@@ -423,14 +425,9 @@ class Relay_Protocol_Message
         }
 
         $obj = new self($cmd);
-
-        if (isset($prefix)) {
-            $obj->setPrefix($prefix);
-        }
-
+        
         $c = 0;
         $params = array();
-
         for(; $p < strlen($str); $p++) {
 
             if ($str[$p] == ' ') {
@@ -446,12 +443,15 @@ class Relay_Protocol_Message
             $params[$c] .= $str[$p];
         }
 
-        $obj->setParam($params);
+        
 
+        $trail = '';
         for(; $p < strlen($str); $p++) {
             $trail .= $str[$p];
         }
 
+        $obj->setParam($params);
+        $obj->setPrefix($prefix);
         $obj->setTrail($trail);
 
         return $obj;
