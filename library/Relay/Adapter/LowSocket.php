@@ -13,17 +13,20 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
         $resource = socket_create($contype, SOCK_STREAM, $protocol);
 
         if ($resource === false) {
-            throw new Exception(socket_strerror(socket_last_error()));
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception(socket_strerror(socket_last_error()));
         }
 
         if (socket_connect($resource, $host, $port) === false) {
             $message = socket_strerror(socket_last_error());
-            throw new Exception("Socket connection failed: " . $message);
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception('Socket connection failed: ' . $message);
         }
 
         if (!socket_set_nonblock($resource)) {
             $message = socket_strerror(socket_last_error());
-            throw new Exception("Failed to set block mode: " . $message);
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception("Failed to set block mode: " . $message);
         }
 
         $this->resource = $resource;
@@ -41,12 +44,15 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 
         if ($s === false) {
             $this->disconnect();
-            die("socket_select error" . socket_strerror(socket_last_error()) . "\n");
+            $message = socket_strerror(socket_last_error());
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception('Socket select error: ' . $message);
         }
 
         if (socket_recv($sock[0], $buffer, $bytes, 0) === 0) {
             $this->disconnect();
-            die("socket disconnected: \n");
+            require_once 'Relay/Adapter/Exception.php';
+            throw new Relay_Adapter_Exception('Socket disconnected: ' . $message);
         }
 
         return $buffer;
@@ -64,5 +70,4 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
     {
         $this->disconnect();
     }
-
 }
