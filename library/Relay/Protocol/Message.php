@@ -426,22 +426,25 @@ class Relay_Protocol_Message
         }
 
         $obj = new self($cmd);
-        
-        $c = 0;
+
         $params = array();
+        $param = false;
         for(; $p < strlen($str); $p++) {
 
             if ($str[$p] == self::SEGM_SEP) {
-                if ($str[$p + 1] == self::PREFIX) {
+
+                if ($param !== false) {
+                    $params[] = $param;
+                    $param = false;
+                }
+
+                if ($str[$p+1] == self::PREFIX) {
                     $p += 2;
                     break;
                 }
-
-                $c++;
-                continue;
+            } else {
+                $param .= $str[$p];
             }
-
-            $params[$c] .= $str[$p];
         }
 
         $trail = '';
