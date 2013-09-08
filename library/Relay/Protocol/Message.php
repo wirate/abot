@@ -9,13 +9,13 @@
  */
 class Relay_Protocol_Message
 {
-	/**
-	 * constants
-	 */
-	const PRFX		= ':';
-	const CHPRFX    = '#';
-	const SEPARATOR	= ',';
-	const END 	    = "\n\r";
+    /**
+     * constants
+     */
+    const PRFX = ':';
+    const CHPRFX = '#';
+    const SEPARATOR = ',';
+    const END = "\n\r";
 
     /**
      * Static Array containing command codes
@@ -42,7 +42,7 @@ class Relay_Protocol_Message
         208 => 'RPL_TRACENEWTYPE',
         209 => 'RPL_TRACECLASS',
         210 => 'RPL_TRACERECONNECT',
-        
+
         211 => 'RPL_STATSLINKINFO',
         212 => 'RPL_STATSCOMMANDS',
         219 => 'RPL_ENDOFSTATS',
@@ -61,10 +61,10 @@ class Relay_Protocol_Message
         257 => 'RPL_ADMINLOC1',
         258 => 'RPL_ADMINLOC2',
         259 => 'RPL_ADMINEMAIL',
-         
+
         261 => 'RPL_TRACELOG',
         262 => 'RPL_TRACEEND',
-        
+
         // 300 => 'RPL_NONE',
         301 => 'RPL_AWAY',
         302 => 'RPL_USERHOST',
@@ -160,54 +160,54 @@ class Relay_Protocol_Message
         501 => 'ERR_UMODEUNKOWNFLAG',
         502 => 'ERR_USERSDONTMATCH'
     );
-    
+
     /**
      * Prefix component
      *
      * @var String
      */
     protected $prefix;
-    
+
     /**
      * Command component
      *
      * @var String
      */
     protected $command;
-    
+
     /**
      * Parameters component
      *
      * @var array
      */
     protected $parameters = array();
-    
+
     /**
      * Trailing component
      * 
      * @var String
      */
     protected $trail;
-    
+
     public function __construct($command)
     {
         $this->setCommand($command);
-        
+
         return $this;
     }
-    
+
     public function getPrefix()
     {
         return (strlen($this->prefix) > 0) ? $this->prefix : false;
     }
-    
+
     public function setPrefix($prefix)
     {
         $this->prefix = (string) $prefix;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns the command component
      * 
@@ -216,20 +216,20 @@ class Relay_Protocol_Message
     public function getCommand()
     {
         $cmd = $this->command;
-        if(ctype_digit($cmd)) {
-            if(array_key_exists($cmd, self::$codes)) 
+        if (ctype_digit($cmd)) {
+            if (array_key_exists($cmd, self::$codes))
                 return self::$codes[$cmd];
         }
         return $cmd;
     }
-    
+
     public function setCommand($command)
     {
         $this->command = (string) $command;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns the parameters. 
      * if pos is specified and exits the value is returned, false otherwise.
@@ -239,35 +239,35 @@ class Relay_Protocol_Message
      */
     public function getParam($pos = null)
     {
-    	if($pos !== null) {
-            if(array_key_exists($pos, $this->parameters)) {
+        if ($pos !== null) {
+            if (array_key_exists($pos, $this->parameters)) {
                 return $this->parameters[$pos];
             }
             return false;
-    	}
-    	
+        }
+
         return $this->parameters;
     }
-    
+
     public function setParam($param)
     {
-    	if(is_array($param)) {
-        	foreach($param as $v) {
-        		if(strlen($v) < 0) {
-        			continue;
-        		}
-        	
-            	$this->parameters[] = $v;
-        	}
-        } else if(is_string($param)) {
-        	if(strlen($param) > 0) {
-        		$this->parameters[] = $param;
-        	}
+        if (is_array($param)) {
+            foreach ($param as $v) {
+                if (strlen($v) < 0) {
+                    continue;
+                }
+
+                $this->parameters[] = $v;
+            }
+        } else if (is_string($param)) {
+            if (strlen($param) > 0) {
+                $this->parameters[] = $param;
+            }
         } else {
-        	throw new InvalidArgumentException(
-        	   'Argument must be a string or array, ' . gettype($param) . ' given.');
+            throw new InvalidArgumentException(
+            'Argument must be a string or array, ' . gettype($param) . ' given.');
         }
-        
+
         return $this;
     }
 
@@ -277,19 +277,19 @@ class Relay_Protocol_Message
         $this->parameters = array();
         return $params;
     }
-    
+
     public function setTrail($trail)
     {
         $this->trail = trim($trail);
-        
+
         return $this;
     }
-    
+
     public function getTrail()
     {
         return (strlen($this->trail) > 0) ? $this->trail : false;
     }
- 
+
     /**
      * Builds the full IRC string based on the setted components
      *
@@ -298,37 +298,37 @@ class Relay_Protocol_Message
     public function getMessage()
     {
         $string = '';
-        
-        if(strlen($this->prefix)) {
+
+        if (strlen($this->prefix)) {
             $string .= self::PRFX . $this->prefix . ' ';
         }
-        
+
         $string .= $this->command;
-        
-        foreach($this->parameters as $param) { 
+
+        foreach ($this->parameters as $param) {
             $string .= ' ' . $param;
         }
-        
-        if(strlen($this->trail)) {
+
+        if (strlen($this->trail)) {
             $string .= ' ' . self::PRFX . $this->trail;
         }
-        
+
         return $string . self::END;
     }
 
     public function validatePrefix($prefix = null)
     {
-    	if($prefix === null) {
-    		$prefix = $this->prefix;
-    	}
-    	
-        if(strlen($prefix) === 0) {
+        if ($prefix === null) {
+            $prefix = $this->prefix;
+        }
+
+        if (strlen($prefix) === 0) {
             return true;
         }
-        
+
         return preg_match('/^[^:\x20\xD\xA\x0][^\x20\xD\xA\x0]*$/', $prefix) === 1;
     }
-    
+
     /**
      * method for validating command
      *
@@ -337,62 +337,60 @@ class Relay_Protocol_Message
      */
     public function validateCommand($command = null)
     {
-    	if($command === null) {
-    		$command = $this->command;
-    	}
-    	
+        if ($command === null) {
+            $command = $this->command;
+        }
+
         return preg_match('/^[0-9]{1,3}$|^[A-z]+$/', $command) === 1;
     }
-    
+
     /**
      * FIXME validateParam()
      */
-	public function validateParam($param = null)
-    {  /* 
-    	if(is_string($param)) {
-    		$param = array($param);
-    	}
-    	
-        if($param === null) {
-        	$param = $this->parameters;
+    public function validateParam($param = null)
+    {
+        /*
+        if (is_string($param)) {
+            $param = array($param);
         }
-        
+
+        if ($param === null) {
+            $param = $this->parameters;
+        }
+
         foreach($param as $v) {
-        	
-        	if($v[1] === ':') 
-        	
-        	for($i=1; $i < strlen($v); $i++) {
-        		
-        	}
+
+            if ($v[1] === ':')
+
+            for($i=1; $i < strlen($v); $i++) {
+
+            }
         }
-        
-    	return preg_match('/^[^:\x20\xD\xA\x0][^\x20\xD\xA\x0]*$/', $param) === 1;
-    	*/
-    	return true;
+
+        return preg_match('/^[^:\x20\xD\xA\x0][^\x20\xD\xA\x0]*$/', $param) === 1;
+        */
+        return true;
     }
-    
+
     public function validateTrail($trail = null)
     {
-    	if($trail === null) {
-    		$trail = $this->trail;
-    	}
-    	
+        if ($trail === null) {
+            $trail = $this->trail;
+        }
+
         // empty string are considered valid
-        if(strlen($trail) === 0) {
+        if (strlen($trail) === 0) {
             return true;
         }
-        
+
         return preg_match('/^[^\r\n\x0]*$/', $trail) === 1;
     }
-    
+
     public function valid()
     {
-    	return $this->validatePrefix()
-    		&& $this->validateCommand() 
-    		&& $this->validateParam()
-    		&& $this->validateTrail();
+        return $this->validatePrefix() && $this->validateCommand() && $this->validateParam() && $this->validateTrail();
     }
-    
+
     /**
      * Parse a message string into components.
      * TODO: ugly as hell ;)
@@ -401,67 +399,67 @@ class Relay_Protocol_Message
      */
     static public function fromString($str)
     {
-    	$str = rtrim($str);
-    	$p = 0;
-    	
-        if($str[0] === ':') {
-        	for($p = 1; $p < strlen($str); $p++) {
-        		
-        		if($str[$p] == ' ') {
-        			$p++;
-        			break;
-        		}
-        		
-        		$prefix .= $str[$p];
-        	}
-    	}
-    	
-    	for(; $p < strlen($str); $p++) {
-    		if($str[$p] == ' ') {
-    			break;
-    		}
-    		
-    		$cmd .= $str[$p];
-    	}
-    	
-    	$obj = new self($cmd);
-    	
-    	if(isset($prefix)) {
-    		$obj->setPrefix($prefix);
-    	}
-    	
-    	$c = 0;
-    	$params = array();
-    	
-    	for(; $p < strlen($str); $p++) {
+        $str = rtrim($str);
+        $p = 0;
 
-    		if($str[$p] == ' ') {	
-    			if($str[$p+1] == ':') {
-    				$p += 2;
-    				break;
-    			}
-    			
-    			$c++;
-    			continue;
-    		}
-    		
-    		$params[$c] .= $str[$p];
-    	}
-    	
-    	$obj->setParam($params);
-    	
-    	for(; $p < strlen($str); $p++) {
-    		$trail .= $str[$p];
-    	}
-    	
+        if ($str[0] === ':') {
+            for($p = 1; $p < strlen($str); $p++) {
+
+                if ($str[$p] == ' ') {
+                    $p++;
+                    break;
+                }
+
+                $prefix .= $str[$p];
+            }
+        }
+
+        for(; $p < strlen($str); $p++) {
+            if ($str[$p] == ' ') {
+                break;
+            }
+
+            $cmd .= $str[$p];
+        }
+
+        $obj = new self($cmd);
+
+        if (isset($prefix)) {
+            $obj->setPrefix($prefix);
+        }
+
+        $c = 0;
+        $params = array();
+
+        for(; $p < strlen($str); $p++) {
+
+            if ($str[$p] == ' ') {
+                if ($str[$p + 1] == ':') {
+                    $p += 2;
+                    break;
+                }
+
+                $c++;
+                continue;
+            }
+
+            $params[$c] .= $str[$p];
+        }
+
+        $obj->setParam($params);
+
+        for(; $p < strlen($str); $p++) {
+            $trail .= $str[$p];
+        }
+
         $obj->setTrail($trail);
-    	
+
         return $obj;
     }
-    
+
     public function __toString()
     {
-    	return $this->getMessage();
+        return $this->getMessage();
     }
 }
 
