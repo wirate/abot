@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Relay/Protocol/Helpers/Abstract.php';
+require_once 'Relay/Irc/Helpers/Abstract.php';
 
-class Relay_Protocol_Helpers_Join extends Relay_Protocol_Helpers_Abstract
+class Relay_Irc_Helpers_Join extends Relay_Irc_Helpers_Abstract
 {
     public function join($channels)
     {

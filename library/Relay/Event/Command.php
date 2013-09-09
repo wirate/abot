@@ -33,7 +33,7 @@ abstract class Relay_Event_Command
     	$this->request = $request;
     }
     
-    public function _setMessage(Relay_Protocol_Message $message)
+    public function _setMessage(Relay_Irc_Message $message)
     {
     	$this->message = $message;
     }

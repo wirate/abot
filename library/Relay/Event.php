@@ -79,7 +79,7 @@ class Relay_Event
         return $this->events;
     }
 
-    public function check(Relay_Protocol_Message $message)
+    public function check(Relay_Irc_Message $message)
     {
         foreach($this->events as $event) {
             if ($event['object']->check($message) === false) {

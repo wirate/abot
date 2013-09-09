@@ -7,7 +7,7 @@
  * @see http://www.faqs.org/rfcs/rfc1459.html
  * @see http://www.faqs.org/rfcs/rfc2812.html
  */
-class Relay_Protocol_Message
+class Relay_Irc_Message
 {
     /**
      * constants

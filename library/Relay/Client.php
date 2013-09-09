@@ -8,7 +8,7 @@
  */
 require_once 'Relay/Adapter/Socket.php';
 
-require_once 'Relay/Protocol/Message.php';
+require_once 'Relay/Irc/Message.php';
 
 /**
  * Performs the task of a IRC client. mostly by dispatching task's
@@ -75,13 +75,13 @@ class Relay_Client
         $this->adapter->connect($conf['ip'], $conf['port'], ($conf['use_ssl']) ? 'ssl' : 'tcp');
 
         if (strlen($conf['password'])) {
-            $msg = new Relay_Protocol_Message('PASS');
+            $msg = new Relay_Irc_Message('PASS');
             $msg->setParam($conf['password']);
             $this->write($msg->getMessage());
         }
 
         // Begin forming NICK message
-        $msg = new Relay_Protocol_Message('NICK');
+        $msg = new Relay_Irc_Message('NICK');
         $msg->setParam($conf['nick']);
 
         $this->write($msg->getMessage());
@@ -122,7 +122,7 @@ class Relay_Client
             return;
         }
 
-        $response = Relay_Protocol_Message::fromString($response);
+        $response = Relay_Irc_Message::fromString($response);
 
         switch($response->getCommand()) {
         case 'PING':
@@ -131,7 +131,7 @@ class Relay_Client
             break;
         case 'INVITE' :
             if (in_array($response->getTrail(), $this->config['channels'])) {
-                $msg = new Relay_Protocol_Message('JOIN');
+                $msg = new Relay_Irc_Message('JOIN');
                 $msg->setParam($response->getTrail());
                 echo "INVITE: {$msg->getMessage()}";
                 $this->write($msg->getMessage());
@@ -139,7 +139,7 @@ class Relay_Client
             break;
         case 'RPL_ENDOFMOTD':
         case 'ERR_NOMOTD':
-            $msg = new Relay_Protocol_Message('JOIN');
+            $msg = new Relay_Irc_Message('JOIN');
             $msg->setParam(implode(',', (array) $this->config['channels']));
 
             echo $msg->getMessage();

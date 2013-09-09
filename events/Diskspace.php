@@ -8,7 +8,7 @@ class DiskspaceCommand extends Relay_Event_Command
     {
         $path = '/mnt/downloads';
 
-        $msg = new Relay_Protocol_Message('PRIVMSG');
+        $msg = new Relay_Irc_Message('PRIVMSG');
         $msg->setParam($this->message->getParam(0));
 
         $total = disk_total_space($path);
