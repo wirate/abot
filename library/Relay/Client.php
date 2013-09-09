@@ -1,8 +1,5 @@
 <?php
 
-// :pnx!~pnx@P2PNET-A658E30D.a259.priv.bahnhof.se INVITE serveher :#testchanofdoom
-// ERR_INVITEONLYCHAN when trying to join
-
 /**
  * Relay_Adapter_Socket
  */
