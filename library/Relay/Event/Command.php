@@ -43,16 +43,5 @@ abstract class Relay_Event_Command
     	echo "called $name";
     }
     
-    public function __autoload($class)
-    {
-    	$file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-    	
-    	if(!file_exists($file)) {
-    		throw new Exception("'$file' don't exists");
-    	}
-    	
-    	require_once $file;
-    }
-    
     abstract public function process();
 }
