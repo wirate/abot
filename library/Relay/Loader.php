@@ -63,6 +63,12 @@ class Relay_loader
         return $this->_autoload;
     }
 
+    /**
+     * Enable or disable autoloading.
+     *
+     * @param boolean $enable
+     * @return Relay_Loader
+     */
     public function setAutoload($enable)
     {
         $this->_autoload = (bool) $enable;
@@ -72,6 +78,8 @@ class Relay_loader
         } else {
             spl_autoload_unregister($this->_autoloadFunction);
         }
+
+        return $this;
     }
 
     /**
