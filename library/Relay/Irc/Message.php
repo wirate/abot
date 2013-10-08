@@ -194,13 +194,10 @@ class Relay_Irc_Message
      * Construct a new Irc message.
      *
      * @param string $command   The command component
-     * @return Relay_Irc_Message
      */
     public function __construct($command)
     {
         $this->setCommand($command);
-
-        return $this;
     }
 
     /**
