@@ -16,7 +16,7 @@ class Relay_Irc_Message
     const PREFIX    = ':';
     const CHPREFIX  = '#';
     const SEPARATOR = ',';
-    const EOL 	    = "\n\r";
+    const EOL       = "\n\r";
 
     /**
      * Static Array containing command codes
@@ -190,6 +190,12 @@ class Relay_Irc_Message
      */
     protected $_trail;
 
+    /**
+     * Construct a new Irc message.
+     *
+     * @param string $command   The command component
+     * @return Relay_Irc_Message
+     */
     public function __construct($command)
     {
         $this->setCommand($command);
@@ -197,11 +203,22 @@ class Relay_Irc_Message
         return $this;
     }
 
+    /**
+     * Get the prefix component
+     *
+     * @return string|bool  string if a prefix exists, false otherwise
+     */
     public function getPrefix()
     {
         return (strlen($this->_prefix) > 0) ? $this->_prefix : false;
     }
 
+    /**
+     * Set the prefix component
+     *
+     * @param string $prefix
+     * @return Relay_Irc_Message
+     */
     public function setPrefix($prefix)
     {
         $this->_prefix = (string) $prefix;
@@ -210,7 +227,7 @@ class Relay_Irc_Message
     }
 
     /**
-     * Returns the command component
+     * Get the command component
      * 
      * @return string
      */
@@ -224,6 +241,12 @@ class Relay_Irc_Message
         return $cmd;
     }
 
+    /**
+     * Set the command component
+     *
+     * @param string $command
+     * @return Relay_Irc_Message
+     */
     public function setCommand($command)
     {
         $this->_command = (string) $command;
@@ -278,6 +301,11 @@ class Relay_Irc_Message
         return $this;
     }
 
+    /**
+     * Clear the param component.
+     *
+     * @return array    The old params.
+     */
     public function resetParams()
     {
         $params = $this->_parameters;
@@ -285,6 +313,12 @@ class Relay_Irc_Message
         return $params;
     }
 
+    /**
+     * Set the trailing component.
+     *
+     * @param string $trail
+     * @return Relay_Irc_Message
+     */
     public function setTrail($trail)
     {
         $this->_trail = trim($trail);
@@ -292,6 +326,11 @@ class Relay_Irc_Message
         return $this;
     }
 
+    /**
+     * Get the trailing component.
+     *
+     * @return string
+     */
     public function getTrail()
     {
         return (strlen($this->_trail) > 0) ? $this->_trail : false;
@@ -395,14 +434,18 @@ class Relay_Irc_Message
 
     public function valid()
     {
-        return $this->validatePrefix() && $this->validateCommand() && $this->validateParam() && $this->validateTrail();
+        return $this->validatePrefix()
+            && $this->validateCommand()
+            && $this->validateParam()
+            && $this->validateTrail();
     }
 
     /**
      * Parse a message string into components.
      * TODO: ugly as hell ;)
      * 
-     * @param $str
+     * @param string $str   The string to parse
+     * @return Relay_Irc_Message
      */
     static public function fromString($str)
     {
@@ -465,6 +508,12 @@ class Relay_Irc_Message
         return $obj;
     }
 
+    /**
+     * Get a string representation of this object.
+     * @see Relay_Irc_Message::getMessage()
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->getMessage();
