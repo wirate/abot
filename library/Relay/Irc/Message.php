@@ -233,20 +233,26 @@ class Relay_Irc_Message
 
     /**
      * Returns the parameters. 
-     * if pos is specified and exits the value is returned, false otherwise.
+     * if index is specified and exits the value is returned, false otherwise.
      * 
-     * @param $pos
+     * @param $index  (optional) integer
      * @return string|array|false
+     * @throws InvalidArgumentException
      */
-    public function getParam($pos = null)
+    public function getParam($index = null)
     {
-        if ($pos !== null) {
-            if (array_key_exists($pos, $this->parameters)) {
-                return $this->parameters[$pos];
+        if ($index != null) {
+            if (!is_integer($index)) {
+                $msg = 'Argument must be of type integer, '
+                     . gettype($index) . ' given';
+                throw new InvalidArgumentException($msg);
+            }
+
+            if (array_key_exists($index, $this->parameters)) {
+                return $this->parameters[$index];
             }
             return false;
         }
-
         return $this->parameters;
     }
 
