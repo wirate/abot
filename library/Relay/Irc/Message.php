@@ -167,28 +167,28 @@ class Relay_Irc_Message
      *
      * @var String
      */
-    protected $prefix;
+    protected $_prefix;
 
     /**
      * Command component
      *
      * @var String
      */
-    protected $command;
+    protected $_command;
 
     /**
      * Parameters component
      *
      * @var array
      */
-    protected $parameters = array();
+    protected $_parameters = array();
 
     /**
      * Trailing component
      * 
      * @var String
      */
-    protected $trail;
+    protected $_trail;
 
     public function __construct($command)
     {
@@ -199,12 +199,12 @@ class Relay_Irc_Message
 
     public function getPrefix()
     {
-        return (strlen($this->prefix) > 0) ? $this->prefix : false;
+        return (strlen($this->_prefix) > 0) ? $this->_prefix : false;
     }
 
     public function setPrefix($prefix)
     {
-        $this->prefix = (string) $prefix;
+        $this->_prefix = (string) $prefix;
 
         return $this;
     }
@@ -216,7 +216,7 @@ class Relay_Irc_Message
      */
     public function getCommand()
     {
-        $cmd = $this->command;
+        $cmd = $this->_command;
         if (ctype_digit($cmd)) {
             if (array_key_exists($cmd, self::$codes))
                 return self::$codes[$cmd];
@@ -226,7 +226,7 @@ class Relay_Irc_Message
 
     public function setCommand($command)
     {
-        $this->command = (string) $command;
+        $this->_command = (string) $command;
 
         return $this;
     }
@@ -248,12 +248,12 @@ class Relay_Irc_Message
                 throw new InvalidArgumentException($msg);
             }
 
-            if (array_key_exists($index, $this->parameters)) {
-                return $this->parameters[$index];
+            if (array_key_exists($index, $this->_parameters)) {
+                return $this->_parameters[$index];
             }
             return false;
         }
-        return $this->parameters;
+        return $this->_parameters;
     }
 
     public function setParam($param)
@@ -264,11 +264,11 @@ class Relay_Irc_Message
                     continue;
                 }
 
-                $this->parameters[] = $v;
+                $this->_parameters[] = $v;
             }
         } else if (is_string($param)) {
             if (strlen($param) > 0) {
-                $this->parameters[] = $param;
+                $this->_parameters[] = $param;
             }
         } else {
             throw new InvalidArgumentException(
@@ -280,21 +280,21 @@ class Relay_Irc_Message
 
     public function resetParams()
     {
-        $params = $this->parameters;
-        $this->parameters = array();
+        $params = $this->_parameters;
+        $this->_parameters = array();
         return $params;
     }
 
     public function setTrail($trail)
     {
-        $this->trail = trim($trail);
+        $this->_trail = trim($trail);
 
         return $this;
     }
 
     public function getTrail()
     {
-        return (strlen($this->trail) > 0) ? $this->trail : false;
+        return (strlen($this->_trail) > 0) ? $this->_trail : false;
     }
 
     /**
@@ -306,18 +306,18 @@ class Relay_Irc_Message
     {
         $string = '';
 
-        if (strlen($this->prefix)) {
-            $string .= self::PREFIX . $this->prefix . self::SEGM_SEP;
+        if (strlen($this->_prefix)) {
+            $string .= self::PREFIX . $this->_prefix . self::SEGM_SEP;
         }
 
-        $string .= $this->command;
+        $string .= $this->_command;
 
-        foreach ($this->parameters as $param) {
+        foreach ($this->_parameters as $param) {
             $string .= self::SEGM_SEP . $param;
         }
 
-        if (strlen($this->trail)) {
-            $string .= self::SEGM_SEP . self::PREFIX . $this->trail;
+        if (strlen($this->_trail)) {
+            $string .= self::SEGM_SEP . self::PREFIX . $this->_trail;
         }
 
         return $string . self::EOL;
@@ -326,7 +326,7 @@ class Relay_Irc_Message
     public function validatePrefix($prefix = null)
     {
         if ($prefix === null) {
-            $prefix = $this->prefix;
+            $prefix = $this->_prefix;
         }
 
         if (strlen($prefix) === 0) {
@@ -345,7 +345,7 @@ class Relay_Irc_Message
     public function validateCommand($command = null)
     {
         if ($command === null) {
-            $command = $this->command;
+            $command = $this->_command;
         }
 
         return preg_match('/^[0-9]{1,3}$|^[A-z]+$/', $command) === 1;
@@ -382,7 +382,7 @@ class Relay_Irc_Message
     public function validateTrail($trail = null)
     {
         if ($trail === null) {
-            $trail = $this->trail;
+            $trail = $this->_trail;
         }
 
         // empty string are considered valid
