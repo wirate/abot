@@ -26,7 +26,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      * Socket Resource
      * @var resource|null
      */
-    protected $resource = null;
+    protected $_resource = null;
 
     /**
      * Create and connect socket.
@@ -51,7 +51,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
             throw new Relay_Adapter_Exception("Could not set blocking mode");
         }
 
-        $this->resource = $resource;
+        $this->_resource = $resource;
     }
 
     /**
@@ -62,7 +62,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function write($data)
     {
-        return @fwrite($this->resource, $data);
+        return @fwrite($this->_resource, $data);
     }
 
     /**
@@ -73,7 +73,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function read($bytes = 1024)
     {
-        $stream = array($this->resource);
+        $stream = array($this->_resource);
 
         if (stream_select($stream, $n = null, $n = null, 3) === 0) {
             return;
@@ -94,9 +94,9 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      */
     public function disconnect()
     {
-        if ($this->resource !== null) {
-            @fclose($this->resource);
-            $this->resource = null;
+        if ($this->_resource !== null) {
+            @fclose($this->_resource);
+            $this->_resource = null;
         }
     }
 
