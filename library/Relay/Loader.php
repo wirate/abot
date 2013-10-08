@@ -8,7 +8,7 @@ require_once 'Relay/Exception.php';
 /**
  * Class for loading other classes.
  */
-class Relay_loader
+class Relay_Loader
 {
     /**
      * Name of the function used for autoloading.
