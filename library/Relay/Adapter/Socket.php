@@ -15,12 +15,12 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      * @link http://se2.php.net/manual/en/transports.php
      */
 
-    const TCP = 'tcp';
-    const SSL = 'ssl';
+    const TCP   = 'tcp';
+    const SSL   = 'ssl';
     const SSLV2 = 'sslv2';
     const SSLV3 = 'sslv3';
-    const UDP = 'udp';
-    const TLS = 'tls';
+    const UDP   = 'udp';
+    const TLS   = 'tls';
 
     /**
      * Socket Resource
