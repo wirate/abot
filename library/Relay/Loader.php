@@ -45,6 +45,11 @@ class Relay_Loader
     {
     }
 
+    /**
+     * Get the singleton instance.
+     *
+     * @return Relay_Loader
+     */
     public static function getInstance()
     {
         if (self::$_instance === null) {
