@@ -51,9 +51,11 @@ class Relay_Irc_Message
      *
      * @param string $command   The command component
      */
-    public function __construct($command)
+    public function __construct($command = null)
     {
+        if ($command !== null) {
             $this->setCommand($command);
+        }
     }
 
     /**
