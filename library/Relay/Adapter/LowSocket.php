@@ -4,13 +4,62 @@ require_once 'Relay/Adapter/Interface.php';
 
 class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 {
+    /**
+     * Socket domain (IPv4, IPv6 or local)
+     *
+     * @var int
+     */
+    protected $_domain;
 
+    /**
+     * Socket type.
+     *
+     * @var int
+     */
+    protected $_type;
+
+    /**
+     * Protocol the socket to use. (TCP, UDP, Raw)
+     *
+     * @var int
+     */
+    protected $_protocol;
+
+    /**
+     * The Socket resource
+     *
+     * @var resource
+     */
     protected $resource = null;
 
-    public function connect($host, $port, $contype = AF_INET,
-                            $protocol = SOL_TCP)
+    /**
+     * Default is a IPv4 stream socket using the TCP protocol.
+     *
+     * @param int $domain
+     * @param int $type
+     * @param int $protocol
+     */
+    public function __construct($domain = AF_INET, $type = SOCK_STREAM,
+                                $protocol = SOL_TCP)
     {
-        $resource = socket_create($contype, SOCK_STREAM, $protocol);
+        $this->_domain = $domain;
+        $this->_type = $type;
+        $this->_protocol = $protocol;
+    }
+
+    /**
+     * Establish connection
+     *
+     * @param string $host
+     * @param int    $port
+     */
+    public function connect($host, $port)
+    {
+        // disconnect first.
+        $this->disconnect();
+
+        // Create a socket.
+        $resource = socket_create($this->_domain, $this->_type, $this->_protocol);
 
         if ($resource === false) {
             require_once 'Relay/Adapter/Exception.php';
