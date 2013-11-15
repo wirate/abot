@@ -30,7 +30,7 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
      *
      * @var resource
      */
-    protected $resource = null;
+    protected $_resource = null;
 
     /**
      * Default is a IPv4 stream socket using the TCP protocol.
@@ -78,17 +78,17 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
             throw new Relay_Adapter_Exception("Failed to set block mode: " . $message);
         }
 
-        $this->resource = $resource;
+        $this->_resource = $resource;
     }
 
     public function write($data)
     {
-        return @socket_write($this->resource, $data);
+        return @socket_write($this->_resource, $data);
     }
 
     public function read($bytes = 1024)
     {
-        $sock = array($this->resource);
+        $sock = array($this->_resource);
         $s = socket_select($sock, $n = null, $n = null, 300);
 
         if ($s === false) {
@@ -109,9 +109,9 @@ class Relay_Adapter_LowSocket implements Relay_Adapter_Interface
 
     public function disconnect()
     {
-        if ($this->resource !== null) {
-            socket_close($this->resource);
-            $this->resource = null;
+        if ($this->_resource !== null) {
+            socket_close($this->_resource);
+            $this->_resource = null;
         }
     }
 
