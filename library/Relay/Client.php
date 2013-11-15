@@ -119,9 +119,11 @@ class Relay_Client
             return;
         }
 
-        $response = Relay_Irc_Message::fromString($response);
+        $obj = new Relay_Irc_Response();
+        $obj->parse($response);
+        $response = $obj;
 
-        switch($response->getCommand()) {
+        switch($response->getCommandName()) {
         case 'PING':
             // respond to ping
             $this->write("PONG :{$response->getTrail()}\n");
