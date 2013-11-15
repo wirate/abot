@@ -23,14 +23,14 @@ class Relay_Irc_Message
      *
      * @var String
      */
-    protected $_prefix;
+    protected $_prefix = null;
 
     /**
      * Command component
      *
      * @var String
      */
-    protected $_command;
+    protected $_command = null;
 
     /**
      * Parameters component
@@ -44,7 +44,7 @@ class Relay_Irc_Message
      * 
      * @var String
      */
-    protected $_trail;
+    protected $_trail = null;
 
     /**
      * Construct a new Irc message.
