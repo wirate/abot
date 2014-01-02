@@ -145,7 +145,7 @@ class Relay_Client
             $this->write($msg->getMessage());
 
             if (is_array($this->config['automsg'])) {
-                $msg = new Relay_Protocol_Message('PRIVMSG');
+                $msg = new Relay_Irc_Message('PRIVMSG');
 
                 foreach($this->config['automsg'] as $cmsg) {
 
