@@ -113,7 +113,7 @@ class Relay_Irc_Message
      */
     public function getParam($index = null)
     {
-        if ($index != null) {
+        if ($index !== null) {
             if (!is_integer($index)) {
                 $msg = 'Argument must be of type integer, '
                      . gettype($index) . ' given';
