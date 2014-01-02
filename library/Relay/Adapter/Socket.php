@@ -78,7 +78,7 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
     {
         $stream = array($this->_resource);
 
-        if (stream_select($stream, $n = null, $n = null, 3) === 0) {
+        if (@stream_select($stream, $n = null, $n = null, 3) === 0) {
             return;
         }
 
