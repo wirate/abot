@@ -14,7 +14,6 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
      * Transfer protocol constants
      * @link http://se2.php.net/manual/en/transports.php
      */
-
     const TCP   = 'tcp';
     const SSL   = 'ssl';
     const SSLV2 = 'sslv2';
@@ -49,7 +48,8 @@ class Relay_Adapter_Socket implements Relay_Adapter_Interface
             throw new Relay_Adapter_Exception($message, $errno);
         }
 
-        if (set_socket_blocking($resource, 0) === false) {
+        // Set stream to non blocking.
+        if (stream_set_blocking($resource, 0) === false) {
             require_once 'Relay/Adapter/Exception.php';
             throw new Relay_Adapter_Exception("Could not set blocking mode");
         }
